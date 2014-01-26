@@ -11,6 +11,7 @@ namespace Destroy.All.Hippies
         //Base class for all entities in game
         //Attributes
         private Vector3 mPosition;
+        Vector3 mDirection = new Vector3(-1, 0, 0);
         private Vector3 mScale;
         private SceneNode mSceneNode;
         private string mMaterialName;
@@ -58,15 +59,20 @@ namespace Destroy.All.Hippies
             mSceneNode.SetPosition(mPosition.x, mPosition.y, mPosition.z);
         }
 
+        public void SetDirection(Vector3 dir)
+        {
+            mDirection = dir;
+        }
+
         public Vector3 GetPosition()
         {
             return mPosition;
         }
 
-        public void Update(Vector3 pos)
+        public void Update(float elapsedTime)
         {
             //Move by additional position
-            mPosition += (pos * MoveRate);
+            mPosition += (mDirection * elapsedTime * MoveRate);
             mSceneNode.SetPosition(mPosition.x, mPosition.y, mPosition.z);
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mogre;
+using System.Drawing;
 
 namespace Destroy.All.Hippies
 {
@@ -22,9 +23,9 @@ namespace Destroy.All.Hippies
         private Vector3 mPlayerDiffPos = new Vector3();
         private Vector3 mEnemyStartPos = new Vector3(200, -50, 0);
         private Vector3 mEnemyDiffPos = new Vector3();
-        private Vector3 mWeaponDiffPos = new Vector3();
 
-        private bool mWeaponFired = false;
+        WeaponManager mWeaponManager;
+
         double mGameTime;
 
         public GamePlayState(SceneManager sceneMgr, PersistantGameData gameData, Player player)
@@ -39,7 +40,6 @@ namespace Destroy.All.Hippies
             //Reset diffs
             mPlayerDiffPos = Vector3.ZERO;
             mEnemyDiffPos = Vector3.ZERO;
-            mWeaponDiffPos = Vector3.ZERO;
 
             //Level data
             mGameTime -= elapsedTime;
@@ -65,20 +65,7 @@ namespace Destroy.All.Hippies
             if (keyState.IsKeyDown(MOIS.KeyCode.KC_RETURN))
             {
                 //Fire weapon
-                if (!mWeaponFired)
-                {
-                    mWeapon.SetPosition(mPlayer.GetPosition());
-                    mWeaponFired = true;
-                }
-            }
-
-            if (mWeaponFired)
-            {
-                mWeaponDiffPos.x = (float)elapsedTime;
-            }
-            else
-            {
-                mWeapon.SetPosition(mPlayer.GetPosition());
+                mWeaponManager.Fire(mPlayer.GetPosition());
             }
 
             for (int en = 0; en < mNumEnemies; ++en)
@@ -86,20 +73,16 @@ namespace Destroy.All.Hippies
                 mEnemies[en].Update(mEnemyDiffPos);
             }
             mPlayer.Update(mPlayerDiffPos);
-            mWeapon.Update(mWeaponDiffPos);
-            if (mWeapon.GetPosition().x >= 320)
-                mWeaponFired = false;
+            mWeaponManager.Update((float)elapsedTime);
 
             //See what is interacting
             for (int en = 0; en < mNumEnemies; ++en)
             {
-                if (mWeapon.Intersects(mEnemies[en].getGameNode()))
+                if (mWeaponManager.Intersects(mEnemies[en].getGameNode()))
                 {
                     //Bullet hit enemy
                     mEnemyDead = true;
                     mEnemies[en].SetMaterial("Hippies/Dead");
-                    //Can fire again
-                    mWeaponFired = false;
                 }
             }
 
@@ -139,6 +122,7 @@ namespace Destroy.All.Hippies
             mEnemyDiffPos = Vector3.ZERO;
 
             //Create weapons
+            mWeaponManager = new WeaponManager(new RectangleF(-1024 / 2, 768 / 2, 1024, 768), mSceneMgr);
             objectScale.x = 0.3f;
             objectScale.y = 0.3f;
             objectScale.z = 0.001f;
