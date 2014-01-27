@@ -11,18 +11,18 @@ namespace Destroy.All.Hippies
     {
         string mStateName = "play";
         SceneManager mSceneMgr;
-        private uint mNumEnemies = 3;
-        private bool mEnemyDead = false;
+        uint mNumEnemies = 3;
+        bool mEnemyDead = false;
         PersistantGameData mGameData;
 
         Player mPlayer;
         List<Enemy> mEnemies = new List<Enemy>();
-        private Weapon mWeapon;
+        Weapon mWeapon;
 
-        private Vector3 mPlayerStartPos = new Vector3(-200, 0, 0);
-        private Vector3 mPlayerDiffPos = new Vector3();
-        private Vector3 mEnemyStartPos = new Vector3(200, -50, 0);
-        private Vector3 mEnemyDiffPos = new Vector3();
+        Vector3 mPlayerStartPos = new Vector3(-200, 0, 0);
+        Vector3 mPlayerDiffPos = new Vector3();
+        Vector3 mEnemyStartPos = new Vector3(200, -50, 0);
+        Vector3 mEnemyDiffPos = new Vector3();
 
         WeaponManager mWeaponManager;
 
@@ -70,9 +70,9 @@ namespace Destroy.All.Hippies
 
             for (int en = 0; en < mNumEnemies; ++en)
             {
-                mEnemies[en].Update(mEnemyDiffPos);
+                mEnemies[en].Update((float)elapsedTime);
             }
-            mPlayer.Update(mPlayerDiffPos);
+            mPlayer.Update((float)elapsedTime);
             mWeaponManager.Update((float)elapsedTime);
 
             //See what is interacting
@@ -106,7 +106,6 @@ namespace Destroy.All.Hippies
             node.AddChild(mPlayer.getGameNode());
             mPlayer.SetPosition(mPlayerStartPos);
             mPlayer.SetScale(objectScale);
-            mPlayerDiffPos = Vector3.ZERO;
 
             //Create enemies
             Vector3 startPos = mEnemyStartPos;
@@ -118,6 +117,7 @@ namespace Destroy.All.Hippies
                 startPos.y += i * 40;
                 mEnemies[i].SetPosition(startPos);
                 mEnemies[i].SetScale(objectScale);
+                mEnemies[i].SetDirection(new Vector3(-1, 0, 0));
             }
             mEnemyDiffPos = Vector3.ZERO;
 
@@ -126,11 +126,8 @@ namespace Destroy.All.Hippies
             objectScale.x = 0.3f;
             objectScale.y = 0.3f;
             objectScale.z = 0.001f;
-            mWeapon = new Weapon("Bullet", "cube.mesh", "Hippies/Bullet");
-            mWeapon.init(mSceneMgr);
-            node.AddChild(mWeapon.getGameNode());
-            mWeapon.SetPosition(mPlayerStartPos);
-            mWeapon.SetScale(objectScale);
+            node.AddChild(mWeaponManager.GetWeaponNode());
+            mWeaponManager.SetScale(objectScale);
 
             //Level data
             mGameTime = mGameData.CurrentLevel.Time;

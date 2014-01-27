@@ -13,20 +13,40 @@ namespace Destroy.All.Hippies
         int mNumWeapons;
         int mNumFiredWeapons = 0;
         SceneNode mManagerNode;
+        SceneManager mSceneMgr;
 
         public WeaponManager(RectangleF playArea, SceneManager sceneMgr, int numberWeapons=1)
         {
             mNumWeapons = numberWeapons;
-            mManagerNode = sceneMgr.CreateSceneNode("WeaponManagerNode");
+            mSceneMgr = sceneMgr;
+            mManagerNode = mSceneMgr.CreateSceneNode("WeaponManagerNode");
             initWeapons();
+        }
+
+        public SceneNode GetWeaponNode()
+        {
+            return mManagerNode;
         }
 
         private void initWeapons()
         {
+            //New weapons added to main manager node
+            //All invisible in first instance
             for (int i = 0; i < mNumWeapons; ++i)
             {
                 mWeapons.Add(new Weapon("Bullet" + i.ToString(), "cube.mesh", "Hippies/Bullet"));
+                mWeapons[i].init(mSceneMgr);
                 mManagerNode.AddChild(mWeapons[i].getGameNode());
+                mWeapons[i].getGameNode().SetVisible(false);
+            }
+        }
+
+        public void SetScale(Vector3 scale)
+        {
+            //Scale applies to all weapons in manager
+            foreach (Weapon w in mWeapons)
+            {
+                w.SetScale(scale);
             }
         }
 

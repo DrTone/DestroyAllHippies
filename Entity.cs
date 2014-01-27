@@ -11,7 +11,7 @@ namespace Destroy.All.Hippies
         //Base class for all entities in game
         //Attributes
         private Vector3 mPosition;
-        Vector3 mDirection = new Vector3(-1, 0, 0);
+        Vector3 mDirection = new Vector3(1, 0, 0);
         private Vector3 mScale;
         private SceneNode mSceneNode;
         private string mMaterialName;
