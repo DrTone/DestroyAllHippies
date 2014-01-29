@@ -14,9 +14,12 @@ namespace Destroy.All.Hippies
         int mNumFiredWeapons = 0;
         SceneNode mManagerNode;
         SceneManager mSceneMgr;
+        Vector3 mDirection = new Vector3();
+        RectangleF mPlayArea;
 
         public WeaponManager(RectangleF playArea, SceneManager sceneMgr, int numberWeapons=1)
         {
+            mPlayArea = playArea;
             mNumWeapons = numberWeapons;
             mSceneMgr = sceneMgr;
             mManagerNode = mSceneMgr.CreateSceneNode("WeaponManagerNode");
@@ -57,15 +60,31 @@ namespace Destroy.All.Hippies
 
             mWeapons[mNumFiredWeapons].SetPosition(pos);
             mWeapons[mNumFiredWeapons].Fired = true;
+            mWeapons[mNumFiredWeapons].getGameNode().SetVisible(true);
             ++mNumFiredWeapons;
+            //DEBUG
+            Console.WriteLine("Fired = {0}", mNumFiredWeapons);
         }
 
         public void Update(float elapsedTime)
         {
+            //All weapons travel in same direction for now
+            mDirection.x = elapsedTime;
             for (int i = 0; i < mNumWeapons; ++i)
             {
                 if (mWeapons[i].Fired)
-                    mWeapons[i].Update(elapsedTime);
+                {
+                    mWeapons[i].Update(mDirection);
+                    Vector3 pos = mWeapons[i].GetPosition();
+                    if (pos.x >= mPlayArea.Right)
+                    {
+                        mWeapons[i].Fired = false;
+                        mWeapons[i].getGameNode().SetVisible(false);
+                        --mNumFiredWeapons;
+                        //DEBUG
+                        Console.WriteLine("Fired = {0}", mNumFiredWeapons);
+                    }
+                }   
             }
         }
 
@@ -73,8 +92,15 @@ namespace Destroy.All.Hippies
         {
             for (int i = 0; i < mNumWeapons; ++i)
             {
-                if (mWeapons[i].Intersects(objectNode))
+                if (mWeapons[i].Fired && mWeapons[i].Intersects(objectNode))
+                {
+                    mWeapons[i].Fired = false;
+                    mWeapons[i].getGameNode().SetVisible(false);
+                    --mNumFiredWeapons;
+                    //DEBUG
+                    Console.WriteLine("Fired = {0}", mNumFiredWeapons);
                     return true;
+                }
             }
 
             return false;

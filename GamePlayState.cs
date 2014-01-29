@@ -17,8 +17,7 @@ namespace Destroy.All.Hippies
 
         Player mPlayer;
         List<Enemy> mEnemies = new List<Enemy>();
-        Weapon mWeapon;
-
+        
         Vector3 mPlayerStartPos = new Vector3(-200, 0, 0);
         Vector3 mPlayerDiffPos = new Vector3();
         Vector3 mEnemyStartPos = new Vector3(200, -50, 0);
@@ -39,7 +38,6 @@ namespace Destroy.All.Hippies
         {
             //Reset diffs
             mPlayerDiffPos = Vector3.ZERO;
-            mEnemyDiffPos = Vector3.ZERO;
 
             //Level data
             mGameTime -= elapsedTime;
@@ -70,9 +68,9 @@ namespace Destroy.All.Hippies
 
             for (int en = 0; en < mNumEnemies; ++en)
             {
-                mEnemies[en].Update((float)elapsedTime);
+                mEnemies[en].Update(mEnemyDiffPos);
             }
-            mPlayer.Update((float)elapsedTime);
+            mPlayer.Update(mPlayerDiffPos);
             mWeaponManager.Update((float)elapsedTime);
 
             //See what is interacting
@@ -122,7 +120,7 @@ namespace Destroy.All.Hippies
             mEnemyDiffPos = Vector3.ZERO;
 
             //Create weapons
-            mWeaponManager = new WeaponManager(new RectangleF(-1024 / 2, 768 / 2, 1024, 768), mSceneMgr);
+            mWeaponManager = new WeaponManager(new RectangleF(-320 / 2, 768 / 2, 640, 768), mSceneMgr);
             objectScale.x = 0.3f;
             objectScale.y = 0.3f;
             objectScale.z = 0.001f;

@@ -10,18 +10,18 @@ namespace Destroy.All.Hippies
     {
         //Base class for all entities in game
         //Attributes
-        private Vector3 mPosition;
+        Vector3 mPosition;
         Vector3 mDirection = new Vector3(1, 0, 0);
-        private Vector3 mScale;
-        private SceneNode mSceneNode;
-        private string mMaterialName;
-        private string mMeshName;
-        private string mGameName;
+        Vector3 mScale;
+        SceneNode mSceneNode;
+        string mMaterialName;
+        string mMeshName;
+        string mGameName;
 
         public float MoveRate { get; set; }
 
         //Mogre attributes
-        private Entity mEntity;
+        Entity mEntity;
 
         public GameEntity(string name, string meshName, string matName)
         {
@@ -69,10 +69,10 @@ namespace Destroy.All.Hippies
             return mPosition;
         }
 
-        public void Update(float elapsedTime)
+        public void Update(Vector3 diffPos)
         {
             //Move by additional position
-            mPosition += (mDirection * elapsedTime * MoveRate);
+            mPosition += (diffPos * MoveRate);
             mSceneNode.SetPosition(mPosition.x, mPosition.y, mPosition.z);
         }
 
