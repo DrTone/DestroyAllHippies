@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemy.cs" />
+    <Compile Include="EnemyManager.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="GamePlayState.cs" />

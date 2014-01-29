@@ -24,6 +24,7 @@ namespace Destroy.All.Hippies
         Vector3 mEnemyDiffPos = new Vector3();
 
         WeaponManager mWeaponManager;
+        EnemyManager mEnemyManager;
 
         double mGameTime;
 
@@ -46,10 +47,6 @@ namespace Destroy.All.Hippies
                 return true;
             }
 
-            //Move enemy
-            if(!mEnemyDead)
-                mEnemyDiffPos.x = -(float)elapsedTime;
-
             if (keyState.IsKeyDown(MOIS.KeyCode.KC_W))
             {
                 mPlayerDiffPos.y = (float)elapsedTime;
@@ -66,21 +63,17 @@ namespace Destroy.All.Hippies
                 mWeaponManager.Fire(mPlayer.GetPosition());
             }
 
-            for (int en = 0; en < mNumEnemies; ++en)
-            {
-                mEnemies[en].Update(mEnemyDiffPos);
-            }
             mPlayer.Update(mPlayerDiffPos);
             mWeaponManager.Update((float)elapsedTime);
+            mEnemyManager.Update((float)elapsedTime);
 
             //See what is interacting
-            for (int en = 0; en < mNumEnemies; ++en)
+            for (int en = 0; en < mEnemyManager.GetNumberEnemies(); ++en)
             {
-                if (mWeaponManager.Intersects(mEnemies[en].getGameNode()))
+                if (mWeaponManager.Intersects(mEnemyManager.GetEnemy(en)))
                 {
                     //Bullet hit enemy
-                    mEnemyDead = true;
-                    mEnemies[en].SetMaterial("Hippies/Dead");
+                    mEnemyManager.KillEnemy(en);
                 }
             }
 
@@ -106,18 +99,10 @@ namespace Destroy.All.Hippies
             mPlayer.SetScale(objectScale);
 
             //Create enemies
-            Vector3 startPos = mEnemyStartPos;
-            for (int i = 0; i < mNumEnemies; ++i)
-            {
-                mEnemies.Add(new Enemy("Hippy" + i.ToString(), "cube.mesh", "Hippies/HippyCharacter"));
-                mEnemies[i].init(mSceneMgr);
-                node.AddChild(mEnemies[i].getGameNode());
-                startPos.y += i * 40;
-                mEnemies[i].SetPosition(startPos);
-                mEnemies[i].SetScale(objectScale);
-                mEnemies[i].SetDirection(new Vector3(-1, 0, 0));
-            }
-            mEnemyDiffPos = Vector3.ZERO;
+            mEnemyManager = new EnemyManager(new RectangleF(-320 / 2, 768 / 2, 640, 768), mSceneMgr);
+            mEnemyManager.SetPosition(mEnemyStartPos, 50);
+            mEnemyManager.SetScale(objectScale);
+            node.AddChild(mEnemyManager.GetEnemyNode());
 
             //Create weapons
             mWeaponManager = new WeaponManager(new RectangleF(-320 / 2, 768 / 2, 640, 768), mSceneMgr);
