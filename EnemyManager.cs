@@ -45,7 +45,7 @@ namespace Destroy.All.Hippies
             //New enemies added to main manager node
             for (int i = 0; i < mNumEnemies; ++i)
             {
-                mEnemies.Add(new Enemy("Hippy" + i.ToString(), "cube.mesh", "Hippies/HippyCharacter"));
+                mEnemies.Add(new Enemy("Hippy" + i.ToString(), "hippie.mesh", "Hippies/HippyCharacter"));
                 mEnemies[i].init(mSceneMgr);
                 mManagerNode.AddChild(mEnemies[i].getGameNode());
             }

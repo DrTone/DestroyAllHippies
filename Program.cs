@@ -22,7 +22,7 @@ namespace Destroy.All.Hippies
         int mCurrentState = 0;
         StateSystem mStateSystem = new StateSystem();
         PersistantGameData mGameData = new PersistantGameData();
-        Player mPlayer = new Player("Hero", "cube.mesh", "Hippies/MainCharacter");
+        Player mPlayer = new Player("Hero", "spaceship.mesh", "Hippies/MainCharacter");
 
         public override bool Setup()
         {

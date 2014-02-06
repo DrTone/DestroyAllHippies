@@ -37,7 +37,7 @@ namespace Destroy.All.Hippies
             //All invisible in first instance
             for (int i = 0; i < mNumWeapons; ++i)
             {
-                mWeapons.Add(new Weapon("Bullet" + i.ToString(), "cube.mesh", "Hippies/Bullet"));
+                mWeapons.Add(new Weapon("Bullet" + i.ToString(), "bullet.mesh", "Hippies/Bullet"));
                 mWeapons[i].init(mSceneMgr);
                 mManagerNode.AddChild(mWeapons[i].getGameNode());
                 mWeapons[i].getGameNode().SetVisible(false);
